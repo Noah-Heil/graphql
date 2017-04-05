@@ -1,0 +1,39 @@
+version: "3"
+services:
+  postgres:
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=denali
+      - POSTGRES_DB=denali_development
+      - POSTGRES_PASSWORD=go2school
+  nginx: # Handles the naming dev urls and the dns resolution
+    image: jwilder/nginx-proxy
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    ports:
+      - "80:80"
+  pgweb: # A nice GUI for postgres written in Go
+    restart: always
+    image: sosedoff/pgweb
+    ports: 
+      - "8081:8081"
+    links: 
+      - postgres:postgres
+    environment:
+      - VIRTUAL_HOST=pgweb.dev
+    depends_on:
+      - postgres
+  web:
+    restart: always
+    ports:
+      - "3040:3040"
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - NODE_ENV=devdocker
+      - VIRTUAL_HOST=denali.dev
+    depends_on:
+      - postgres
+      - nginx
