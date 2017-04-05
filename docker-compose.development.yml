@@ -4,9 +4,9 @@ services:
     ports:
       - "5436:5432"
     environment:
-      - POSTGRES_USER=denali
-      - POSTGRES_DB=denali_development
-      - POSTGRES_PASSWORD=go2school
+      - POSTGRES_USER=graphql
+      - POSTGRES_DB=graphql_development
+      - POSTGRES_PASSWORD=password
   nginx: # Handles the naming dev urls and the dns resolution
     image: jwilder/nginx-proxy
     restart: always
@@ -33,7 +33,7 @@ services:
       - ./:/usr/src/app
     environment:
       - NODE_ENV=devdocker
-      - VIRTUAL_HOST=denali.dev
+      - VIRTUAL_HOST=graphql.dev
     depends_on:
       - postgres
       - nginx
